@@ -1,39 +1,39 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Web;
 using AttendanceSystemProject.Models;
 
 namespace AttendanceSystemProject.Services
 {
     public class DatabaseTestService
     {
+        // ✅ Test kết nối database
         public static bool TestDatabaseConnection()
         {
             try
             {
                 using (var context = new AttendanceSystemContext())
                 {
-                    // Test the connection by trying to access the database
+                    // Gửi query đơn giản SELECT 1
                     var connectionTest = context.Database.SqlQuery<int>("SELECT 1").SingleOrDefault();
                     return connectionTest == 1;
                 }
             }
             catch (Exception ex)
             {
-                // Log error if needed
-                System.Diagnostics.Debug.WriteLine("Database connection error: " + ex.Message);
+                System.Diagnostics.Debug.WriteLine("❌ Database connection error: " + ex.Message);
                 return false;
             }
         }
 
+        // ✅ Seed dữ liệu mẫu
         public static void SeedSampleData()
         {
             try
             {
                 using (var context = new AttendanceSystemContext())
                 {
-                    // Check if departments already exist
+                    // 1️⃣ Seed Departments
                     if (!context.Departments.Any())
                     {
                         var departments = new List<Department>
@@ -47,30 +47,36 @@ namespace AttendanceSystemProject.Services
                         context.SaveChanges();
                     }
 
-                    // Check if users already exist
+                    // 2️⃣ Seed Users
                     if (!context.Users.Any())
                     {
+                        var firstDepartmentId = context.Departments.First().DepartmentId;
+
                         var users = new List<User>
                         {
-                            new User 
-                            { 
-                                FirstName = "Nguyễn", 
-                                LastName = "Văn Admin",
+                            new User
+                            {
+                                Username = "admin",
+                                FullName = "Nguyễn Văn Admin",
                                 Email = "admin@school.edu.vn",
-                                Phone = "0123456789",
-                                Role = "Admin",
+                                PhoneNumber = "0123456789",
+                                Role = 0,
                                 IsActive = true,
-                                DepartmentId = context.Departments.First().DepartmentId
+                                DepartmentId = firstDepartmentId,
+                                CreatedDate = DateTime.Now,
+                                EmailConfirmed = true
                             },
-                            new User 
-                            { 
-                                FirstName = "Trần", 
-                                LastName = "Thị Giảng viên",
+                            new User
+                            {
+                                Username = "teacher",
+                                FullName = "Trần Thị Giảng Viên",
                                 Email = "teacher@school.edu.vn",
-                                Phone = "0987654321",
-                                Role = "Teacher",
+                                PhoneNumber = "0987654321",
+                                Role = 1,
                                 IsActive = true,
-                                DepartmentId = context.Departments.First().DepartmentId
+                                DepartmentId = firstDepartmentId,
+                                CreatedDate = DateTime.Now,
+                                EmailConfirmed = true
                             }
                         };
 
@@ -81,7 +87,7 @@ namespace AttendanceSystemProject.Services
             }
             catch (Exception ex)
             {
-                System.Diagnostics.Debug.WriteLine("Error seeding data: " + ex.Message);
+                System.Diagnostics.Debug.WriteLine("❌ Error seeding data: " + ex.Message);
                 throw;
             }
         }

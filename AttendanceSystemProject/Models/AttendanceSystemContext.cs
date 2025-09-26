@@ -1,4 +1,4 @@
-using System.Data.Entity;
+﻿using System.Data.Entity;
 using System.Data.Entity.ModelConfiguration.Conventions;
 
 namespace AttendanceSystemProject.Models
@@ -9,6 +9,8 @@ namespace AttendanceSystemProject.Models
         {
         }
 
+        // Các bảng
+        public DbSet<LoginOtp> LoginOtps { get; set; }
         public DbSet<Department> Departments { get; set; }
         public DbSet<User> Users { get; set; }
         public DbSet<Class> Classes { get; set; }
@@ -23,30 +25,33 @@ namespace AttendanceSystemProject.Models
 
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
-            // Remove pluralizing table name convention
+            base.OnModelCreating(modelBuilder);
+
+            // Bỏ s pluralizing convention
             modelBuilder.Conventions.Remove<PluralizingTableNameConvention>();
 
-            // Configure User entity
-            modelBuilder.Entity<User>()
-                .HasMany(u => u.TaughtClasses)
-                .WithRequired(c => c.Teacher)
-                .HasForeignKey(c => c.TeacherId)
-                .WillCascadeOnDelete(false);
+            // Bảng LoginOtp
+            modelBuilder.Entity<LoginOtp>().ToTable("LoginOtps");
 
+            // ⚙ Cấu hình bảng User
+            modelBuilder.Entity<User>()
+                .ToTable("Users");
+
+            // Quan hệ User - Department (User thuộc 1 Department)
             modelBuilder.Entity<User>()
                 .HasOptional(u => u.Department)
                 .WithMany(d => d.Users)
                 .HasForeignKey(u => u.DepartmentId)
                 .WillCascadeOnDelete(false);
 
-            // Configure Class entity
+            // ⚙ Cấu hình bảng Class
             modelBuilder.Entity<Class>()
                 .HasOptional(c => c.Department)
                 .WithMany(d => d.Classes)
                 .HasForeignKey(c => c.DepartmentId)
                 .WillCascadeOnDelete(false);
 
-            // Configure ClassStudent entity
+            // ⚙ Cấu hình ClassStudent
             modelBuilder.Entity<ClassStudent>()
                 .HasRequired(cs => cs.Class)
                 .WithMany(c => c.ClassStudents)
@@ -55,18 +60,18 @@ namespace AttendanceSystemProject.Models
 
             modelBuilder.Entity<ClassStudent>()
                 .HasRequired(cs => cs.Student)
-                .WithMany(u => u.ClassStudents)
+                .WithMany() // ❌ bỏ WithMany(u => u.ClassStudents) vì User không còn property này
                 .HasForeignKey(cs => cs.StudentId)
                 .WillCascadeOnDelete(false);
 
-            // Configure ClassSession entity
+            // ⚙ Cấu hình ClassSession
             modelBuilder.Entity<ClassSession>()
                 .HasRequired(cs => cs.Class)
                 .WithMany(c => c.ClassSessions)
                 .HasForeignKey(cs => cs.ClassId)
                 .WillCascadeOnDelete(false);
 
-            // Configure EventParticipant entity
+            // ⚙ Cấu hình EventParticipant
             modelBuilder.Entity<EventParticipant>()
                 .HasRequired(ep => ep.Event)
                 .WithMany(e => e.EventParticipants)
@@ -75,14 +80,14 @@ namespace AttendanceSystemProject.Models
 
             modelBuilder.Entity<EventParticipant>()
                 .HasRequired(ep => ep.User)
-                .WithMany(u => u.EventParticipants)
+                .WithMany() // ❌ bỏ WithMany(u => u.EventParticipants)
                 .HasForeignKey(ep => ep.UserId)
                 .WillCascadeOnDelete(false);
 
-            // Configure Attendance entity
+            // ⚙ Cấu hình Attendance
             modelBuilder.Entity<Attendance>()
                 .HasRequired(a => a.User)
-                .WithMany(u => u.Attendances)
+                .WithMany() // ❌ bỏ WithMany(u => u.Attendances)
                 .HasForeignKey(a => a.UserId)
                 .WillCascadeOnDelete(false);
 
@@ -98,10 +103,10 @@ namespace AttendanceSystemProject.Models
                 .HasForeignKey(a => a.EventId)
                 .WillCascadeOnDelete(false);
 
-            // Configure Certificate entity
+            // ⚙ Cấu hình Certificate
             modelBuilder.Entity<Certificate>()
                 .HasRequired(c => c.User)
-                .WithMany(u => u.Certificates)
+                .WithMany() // ❌ bỏ WithMany(u => u.Certificates)
                 .HasForeignKey(c => c.UserId)
                 .WillCascadeOnDelete(false);
 
@@ -111,10 +116,10 @@ namespace AttendanceSystemProject.Models
                 .HasForeignKey(c => c.EventId)
                 .WillCascadeOnDelete(false);
 
-            // Configure EventFeedback entity
+            // ⚙ Cấu hình EventFeedback
             modelBuilder.Entity<EventFeedback>()
                 .HasRequired(ef => ef.User)
-                .WithMany(u => u.EventFeedbacks)
+                .WithMany() // ❌ bỏ WithMany(u => u.EventFeedbacks)
                 .HasForeignKey(ef => ef.UserId)
                 .WillCascadeOnDelete(false);
 
@@ -124,7 +129,7 @@ namespace AttendanceSystemProject.Models
                 .HasForeignKey(ef => ef.EventId)
                 .WillCascadeOnDelete(false);
 
-            // Configure unique constraints
+            // ⚙ Unique constraints
             modelBuilder.Entity<Department>()
                 .HasIndex(d => d.Code)
                 .IsUnique();
@@ -156,8 +161,6 @@ namespace AttendanceSystemProject.Models
             modelBuilder.Entity<SystemSetting>()
                 .HasIndex(ss => ss.SettingKey)
                 .IsUnique();
-
-            base.OnModelCreating(modelBuilder);
         }
     }
 }
