@@ -1,0 +1,30 @@
+@model AttendanceSystem.ViewModels.Shared.PagedResult<AttendanceSystem.ViewModels.User.UserListItemViewModel>
+@{
+    ViewBag.Title = "Danh sách người dùng";
+}
+<h2>@ViewBag.Title</h2>
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>Tên đăng nhập</th>
+            <th>Họ tên</th>
+            <th>Email</th>
+            <th>Vai trò</th>
+            <th>Trạng thái</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+    @foreach (var user in Model.Items)
+    {
+        <tr>
+            <td>@user.Username</td>
+            <td>@user.FullName</td>
+            <td>@user.Email</td>
+            <td>@user.Role</td>
+            <td>@(user.IsActive ? "Kích hoạt" : "Khóa")</td>
+            <td>@Html.ActionLink("Chi tiết", "Details", new { id = user.UserId })</td>
+        </tr>
+    }
+    </tbody>
+</table>

@@ -1,0 +1,36 @@
+@model AttendanceSystem.ViewModels.Event.EventDetailViewModel
+@{
+    ViewBag.Title = Model.EventInfo.Name;
+}
+<h2>@Model.EventInfo.Name (@Model.EventInfo.Code)</h2>
+<p>Thời gian: @Model.EventInfo.StartDate.ToString("dd/MM/yyyy") - @Model.EventInfo.EndDate.ToString("dd/MM/yyyy")</p>
+<p>Trạng thái: @Model.EventInfo.Status</p>
+
+<h3>Người tham dự</h3>
+<table class="table">
+    <thead>
+        <tr>
+            <th>Họ tên</th>
+            <th>Email</th>
+            <th>Trạng thái</th>
+        </tr>
+    </thead>
+    <tbody>
+    @foreach (var participant in Model.Participants)
+    {
+        <tr>
+            <td>@participant.ParticipantName</td>
+            <td>@participant.Email</td>
+            <td>@(participant.IsApproved ? "Đã duyệt" : "Chờ duyệt")</td>
+        </tr>
+    }
+    </tbody>
+</table>
+
+<h3>Phản hồi</h3>
+<ul>
+    @foreach (var feedback in Model.Feedbacks)
+    {
+        <li><strong>@feedback.ParticipantName</strong>: @feedback.Rating sao - @feedback.Comments</li>
+    }
+</ul>

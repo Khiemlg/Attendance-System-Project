@@ -1,0 +1,26 @@
+@model System.Collections.Generic.IEnumerable<AttendanceSystem.ViewModels.Attendance.AttendanceRecordViewModel>
+@{
+    ViewBag.Title = "Điểm danh sự kiện";
+}
+<h2>@ViewBag.Title</h2>
+<table class="table">
+    <thead>
+        <tr>
+            <th>Họ tên</th>
+            <th>Trạng thái</th>
+            <th>Phương thức</th>
+            <th>Check-in</th>
+        </tr>
+    </thead>
+    <tbody>
+    @foreach (var record in Model)
+    {
+        <tr>
+            <td>@record.UserName</td>
+            <td>@record.Status</td>
+            <td>@record.Method</td>
+            <td>@record.CheckInTime.ToString("dd/MM/yyyy HH:mm")</td>
+        </tr>
+    }
+    </tbody>
+</table>

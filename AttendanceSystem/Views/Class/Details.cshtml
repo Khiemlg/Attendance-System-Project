@@ -1,0 +1,56 @@
+@model AttendanceSystem.ViewModels.Class.ClassDetailViewModel
+@{
+    ViewBag.Title = Model.ClassInfo.Name;
+}
+<h2>@Model.ClassInfo.Name (@Model.ClassInfo.Code)</h2>
+<h4>Giảng viên: @Model.ClassInfo.TeacherName</h4>
+<h4>Sinh viên: @Model.ClassInfo.TotalStudents</h4>
+
+<h3>Danh sách buổi học</h3>
+<table class="table">
+    <thead>
+        <tr>
+            <th>Tiêu đề</th>
+            <th>Thời gian</th>
+            <th>Địa điểm</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+    @foreach (var session in Model.Sessions)
+    {
+        <tr>
+            <td>@session.Title</td>
+            <td>@session.StartTime.ToString("dd/MM/yyyy HH:mm")</td>
+            <td>@session.Location</td>
+            <td>
+                @if (!string.IsNullOrEmpty(session.QRCodeUrl))
+                {
+                    <img src="@Url.Content("~" + session.QRCodeUrl)" alt="QR Code" width="80" />
+                }
+            </td>
+        </tr>
+    }
+    </tbody>
+</table>
+
+<h3>Sinh viên</h3>
+<table class="table">
+    <thead>
+        <tr>
+            <th>MSSV</th>
+            <th>Họ tên</th>
+            <th>Email</th>
+        </tr>
+    </thead>
+    <tbody>
+    @foreach (var student in Model.Students)
+    {
+        <tr>
+            <td>@student.StudentCode</td>
+            <td>@student.StudentName</td>
+            <td>@student.StudentEmail</td>
+        </tr>
+    }
+    </tbody>
+</table>

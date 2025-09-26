@@ -1,0 +1,30 @@
+@model AttendanceSystem.ViewModels.Shared.PagedResult<AttendanceSystem.ViewModels.Class.ClassSummaryViewModel>
+@{
+    ViewBag.Title = "Danh sách lớp học";
+}
+<h2>@ViewBag.Title</h2>
+<table class="table table-bordered">
+    <thead>
+        <tr>
+            <th>Tên lớp</th>
+            <th>Mã lớp</th>
+            <th>Giảng viên</th>
+            <th>Số buổi</th>
+            <th>Số sinh viên</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+    @foreach (var cls in Model.Items)
+    {
+        <tr>
+            <td>@cls.Name</td>
+            <td>@cls.Code</td>
+            <td>@cls.TeacherName</td>
+            <td>@cls.TotalSessions</td>
+            <td>@cls.TotalStudents</td>
+            <td>@Html.ActionLink("Xem", "Details", new { id = cls.ClassId })</td>
+        </tr>
+    }
+    </tbody>
+</table>

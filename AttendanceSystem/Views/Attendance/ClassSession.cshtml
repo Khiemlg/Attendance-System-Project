@@ -1,0 +1,6 @@
+@model System.Collections.Generic.IEnumerable<AttendanceSystem.ViewModels.Attendance.AttendanceRecordViewModel>
+@{
+    ViewBag.Title = "Điểm danh theo buổi học";
+}
+<h2>@ViewBag.Title</h2>
+@Html.Partial("_RealtimeRecords", new AttendanceSystem.ViewModels.Attendance.AttendanceRealtimeViewModel { Records = Model })
