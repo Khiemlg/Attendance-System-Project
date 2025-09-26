@@ -4,20 +4,55 @@
 
 <main>
     <section class="row" aria-labelledby="aspnetTitle">
-        <h1 id="title">ASP.NET</h1>
-        <p class="lead">ASP.NET is a free web framework for building great Web sites and Web applications using HTML, CSS and JavaScript.</p>
-        <p><a href="https://asp.net" class="btn btn-primary btn-md">Learn more &raquo;</a></p>
+        <h1 id="title">Hệ Thống Điểm Danh</h1>
+        <p class="lead">Hệ thống quản lý điểm danh cho trường học và sự kiện.</p>
+        
+        @if (ViewBag.DatabaseConnection != null)
+        {
+            <div class="alert alert-@ViewBag.ConnectionStatus">
+                <strong>@ViewBag.DatabaseConnection</strong>
+                @if (ViewBag.DepartmentCount != null)
+                {
+                    <br />
+                    <text>Số khoa: @ViewBag.DepartmentCount | Số người dùng: @ViewBag.UserCount</text>
+                }
+            </div>
+        }
+
+        @if (ViewBag.Error != null)
+        {
+            <div class="alert alert-danger">
+                <strong>Lỗi:</strong> @ViewBag.Error
+            </div>
+        }
+
+        @if (TempData["Message"] != null)
+        {
+            <div class="alert alert-success">
+                @TempData["Message"]
+            </div>
+        }
+
+        @if (TempData["Error"] != null)
+        {
+            <div class="alert alert-danger">
+                @TempData["Error"]
+            </div>
+        }
+
+        <p>
+            <a href="@Url.Action("Index", "Departments")" class="btn btn-primary btn-md">Quản lý Khoa &raquo;</a>
+            <a href="@Url.Action("SeedData", "Home")" class="btn btn-success btn-md">Tạo dữ liệu mẫu &raquo;</a>
+        </p>
     </section>
 
     <div class="row">
         <section class="col-md-4" aria-labelledby="gettingStartedTitle">
-            <h2 id="gettingStartedTitle">Getting started</h2>
+            <h2 id="gettingStartedTitle">Quản lý Khoa</h2>
             <p>
-                ASP.NET MVC gives you a powerful, patterns-based way to build dynamic websites that
-                enables a clean separation of concerns and gives you full control over markup
-                for enjoyable, agile development.
+                Quản lý thông tin các khoa trong trường học. Thêm, sửa, xóa và xem danh sách các khoa.
             </p>
-            <p><a class="btn btn-outline-dark" href="https://go.microsoft.com/fwlink/?LinkId=301865">Learn more &raquo;</a></p>
+            <p><a class="btn btn-outline-dark" href="@Url.Action("Index", "Departments")">Xem Danh sách Khoa &raquo;</a></p>
         </section>
         <section class="col-md-4" aria-labelledby="librariesTitle">
             <h2 id="librariesTitle">Get more libraries</h2>
